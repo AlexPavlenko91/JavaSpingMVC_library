@@ -26,4 +26,12 @@ public class BookService {
     public Book saveBook(Book book){
        return bookRepo.saveAndFlush(book);
     }
+
+    public void removeBook(Book book){
+        bookRepo.delete(book);
+    }
+
+    public Book getBookById(Long id) {
+        return bookRepo.getById(id);
+    }
 }

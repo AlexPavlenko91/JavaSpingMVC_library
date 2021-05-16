@@ -36,4 +36,16 @@ public class LibraryService {
     public Library saveLibrary(Library library) {
         return libraryRepo.saveAndFlush(library);
     }
+
+   /* public Library getLibraryById(Long id) {
+        return libraryRepo.getById(id);
+    }*/
+
+    public void removeLibrary(Library libraryById) {
+        libraryRepo.delete(libraryById);
+    }
+
+   /* public void updateLib(Library library) {
+        libraryRepo.saveAndFlush(library);
+    }*/
 }

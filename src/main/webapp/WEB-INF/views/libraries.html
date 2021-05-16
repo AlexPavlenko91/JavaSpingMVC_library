@@ -5,12 +5,15 @@
     <meta charset="UTF-8" http-equiv="Content-Type" content="text/html; charset=utf-8" >
     <title>Libraries</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+          crossorigin="anonymous">
 </head>
 <body style="padding: 40px">
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        crossorigin="anonymous"></script>
 <div>
     <table border="1" class="table">
         <tr>
@@ -18,15 +21,82 @@
             <th scope="col">NAME</th>
             <th scope="col">CITY</th>
             <th></th>
+            <th></th>
         </tr>
-        <tr th:each="library, s : ${librariesAll}">
+        <tr th:each="lib, s : ${librariesAll}">
             <td th:text="${s.count}">Onions</td>
-            <td th:text="${library.name}">Onions</td>
-            <td th:text="${library.city}">2.41</td>
-            <td class="btn-link" style="cursor: pointer">x</td>
+            <td th:text="${lib.name}">Onions</td>
+            <td th:text="${lib.city}">2.41</td>
+            <td class="d-table-cell">
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">
+                    Add a new book
+                </button>
+                <form class="button" th:action="@{libraries/remove_library}" th:method="post">
+                    <input type="hidden" th:name="id" th:value="${lib.id}"/>
+                    <input type="submit" value="x"/>
+                </form>
+            </td>
+            <td class="d-table-cell">
+                <form class="button" th:action="@{libraries/show_lib}" th:method="post">
+                    <input type="hidden" th:name="id" th:value="${lib.id}"/>
+                    <input type="submit" value="Show"/>
+                </form>
+            </td>
+
+            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Adding a new book</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form th:action="@{/libraries/new_book}" th:method="post" id="newBook"
+                                  th:name="newBook">
+                                <div class="form-group">
+                                    <label for="name" class="col-form-label">Name of the book:</label>
+                                    <input type="text" class="form-control" name="name" id="name" placeholder="Name" required>
+                                </div>
+                                <input type="hidden" th:name="idLib" th:value="${lib.id}"/>
+                                <div class="container" th:object="${authorsAll}">
+                                    <label for="authorSelect">Select an author</label>
+                                    <select class="form-control" id="authorSelect" name="idAuthor" form="newBook" required>
+                                        <option th:each="author : ${authorsAll}"
+                                                th:name="idAuthor"
+                                                th:value="${author.id}"
+                                                th:text="${author.firstName}+' '+${author.lastName}">
+                                        </option>
+                                    </select>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" onclick="form_submit() " class="btn btn-primary">Create</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </tr>
     </table>
 </div>
 <a href="/libraries/new_lib">Create new library</a>
+
+
+
+<script>
+    $('#exampleModal').on('show.bs.modal', function (event) {
+        //let button = $(event.relatedTarget) // Button that triggered the modal
+        //let recipient = button.data('whatever') // Extract info from data-* attributes
+        // let modal = $(this)
+    });
+
+    function form_submit() {
+        document.getElementById("newBook").submit();
+    }
+</script>
 </body>
 </html>

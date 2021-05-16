@@ -2,13 +2,15 @@ package library.models;
 
 
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+
+import javax.persistence.*;
+import javax.transaction.Transactional;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
+@Transactional
 @Entity
 @Table(name = "libraries")
 public class Library extends BaseEntity{
@@ -18,8 +20,28 @@ public class Library extends BaseEntity{
     @OneToMany(mappedBy = "library", fetch = FetchType.EAGER)
     private Set<Author> authors;
 
-    @OneToMany(mappedBy = "library", fetch = FetchType.EAGER)
-    private Set<Book> books;
+
+   /* @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Library library = (Library) o;
+        return Objects.equals(name, library.name) && Objects.equals(city, library.city) && Objects.equals(authors, library.authors) && Objects.equals(books, library.books);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, city, authors, books);
+    }*/
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "libraries_books",
+            joinColumns = @JoinColumn(name = "id_library"),
+            inverseJoinColumns = @JoinColumn(name = "id_book")
+    )
+    private Set<Book>books = new HashSet<>();
+    /*@OneToMany(mappedBy = "library", fetch = FetchType.EAGER)
+    private Set<Book> books;*/
 
     public Library() {
     }
@@ -29,7 +51,7 @@ public class Library extends BaseEntity{
         this.city = city;
     }
 
-    @Override
+    /*@Override
     public String toString() {
         return "Library{" +
                 "id=" + id +
@@ -38,7 +60,7 @@ public class Library extends BaseEntity{
                 ", authors=" + authors +
                 ", books=" + books +
                 '}';
-    }
+    }*/
 
     public String getName() {
         return name;

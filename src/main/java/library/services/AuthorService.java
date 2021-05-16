@@ -32,4 +32,8 @@ public class AuthorService {
     public Author getAuthorById(Long id) {
         return authorRepo.getById(id);
     }
+
+    public void removeAuthor(Author authorById) {
+        authorRepo.delete(authorById);
+    }
 }

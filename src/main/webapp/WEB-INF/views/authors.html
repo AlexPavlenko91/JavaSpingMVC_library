@@ -21,7 +21,12 @@
     <td th:text="${s.count}">Onions</td>
     <td th:text="${author.firstName}">Onions</td>
     <td th:text="${author.lastName}">Onions</td>
-    <td class="btn-link" style="cursor: pointer">x</td>
+    <td class="btn-link" style="cursor: pointer">
+      <form class="button" th:action="@{authors/remove_author}" th:method="post">
+        <input type="hidden" th:name="id" th:value="${author.id}"/>
+        <input type="submit" value="x"/>
+      </form>
+    </td>
   </tr>
 </table>
 

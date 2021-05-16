@@ -8,7 +8,4 @@ import java.util.List;
 
 @Repository
 public interface LibraryRepo extends JpaRepository<Library, Long> {
-    public Library findByName(String libraryName);
-    public Library getById(long id);
-    //void saveLibrary(Library library);
 }

@@ -1,6 +1,10 @@
 package library.controllers;
 
+import library.models.Author;
+import library.models.Book;
 import library.models.Library;
+import library.services.AuthorService;
+import library.services.BookService;
 import library.services.LibraryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
@@ -10,16 +14,35 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Controller
 @RequestMapping(value = "/libraries", method = RequestMethod.GET)
 public class LibraryController {
-    List<Library> libraries = new ArrayList<>();
-
-    private LibraryService libraryService;
+    private List<Library> libraries;
 
     @Autowired
-    public void setService(LibraryService libraryService){
+    public void setLibraries(LibraryService libraryService) {
+        this.libraries = libraryService.getAllLibraries();
+    }
+
+
+    private LibraryService libraryService;
+    private BookService bookService;
+    private AuthorService authorService;
+
+    @Autowired
+    public void setAuthorService(AuthorService authorService) {
+        this.authorService = authorService;
+    }
+
+    @Autowired
+    public void setBookService(BookService bookService) {
+        this.bookService = bookService;
+    }
+
+    @Autowired
+    public void setService(LibraryService libraryService) {
         this.libraryService = libraryService;
     }
 
@@ -27,21 +50,18 @@ public class LibraryController {
     public String showLibraries(Model model) {
 
         model.addAttribute("librariesAll", libraryService.getAllLibraries());
-
+        model.addAttribute("newAuthor", new Author());
+        model.addAttribute("booksAll", bookService.getAllBooks());
+        model.addAttribute("authorsAll", authorService.getAllAuthors());
         return "libraries";
     }
-    @GetMapping( "/id={id}")
-    public String showLibraryById(@PathVariable(name = "id", required = false)@Nullable Long id,
-                                Model model) {
-        Library library = new Library("Central region", "Zhytomyr");
-        Library library1 = libraryService.getById(id);
-        model.addAttribute("library", library);
-        libraries.add(library);
-        libraries.add(library1);
-        model.addAttribute("librariesAll", libraryService.getAllLibraries());
-        System.out.println(library1);
-        //studentMap.put("students", students);
-        return "libraries";
+
+
+    @PostMapping(value = "/show_lib")
+    public String showPostLibrary(Model model, @RequestParam(name = "id") Long id) {
+        //students.add(student);
+        model.addAttribute("libraryById", libraryService.getById(id));
+        return "show_library";
     }
 
     @GetMapping(value = "/new_lib")
@@ -49,10 +69,39 @@ public class LibraryController {
         return "new_library";
     }
 
+    /*@GetMapping(value = "/show_lib")
+    public String showLibrary() {
+        return "show_library";
+    }*/
+
     @PostMapping(value = "/new_post")
     public String newPostLibrary(@ModelAttribute Library library) {
         //students.add(student);
         libraryService.saveLibrary(library);
         return "redirect:/libraries";//вызов другого контроллера
+    }
+
+    @PostMapping(value = "/new_book")
+    public String newPostBookToLibrary(@RequestParam(name = "idAuthor") Long idAuthor, @ModelAttribute Book book,
+                                       @RequestParam(name = "idLib") Long idLib) {
+        book.setAuthor(authorService.getAuthorById(idAuthor));
+        Library library = libraries.stream().filter(lib -> lib.getId().equals(idLib))
+                .findAny()
+                .orElse(null);
+
+        if (library != null) {
+            library.setBooks(Set.of(book));
+            book.setLibraries(Set.of(library));
+        }
+        bookService.saveBook(book);
+        libraryService.removeLibrary(library);
+        libraryService.saveLibrary(library);
+        return "redirect:/libraries";
+    }
+
+    @PostMapping(value = "/remove_library")
+    public String removePostLibrary(@RequestParam Long id) {
+        libraryService.removeLibrary(libraryService.getById(id));
+        return "redirect:/libraries";
     }
 }

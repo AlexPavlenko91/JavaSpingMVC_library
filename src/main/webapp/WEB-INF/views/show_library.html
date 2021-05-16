@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en, ru, ua" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Library details</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          crossorigin="anonymous">
+</head>
+<body style="padding: 40px">
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        crossorigin="anonymous"></script>
+<h1>show123</h1>
+<h2 th:text="${libraryById.name}+' '+${libraryById.city}"></h2>
+<div>
+    <table class="table">
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Book's name</th>
+            <th scope="col">Author's name</th>
+            <th></th>
+        </tr>
+        <tr th:each="book, s : ${libraryById.books}">
+            <td th:text="${s.count}">Onions</td>
+            <td th:text="${book.name}">Onions</td>
+                <td th:text="${book.author.firstName}+' '+${book.author.lastName}"></td>
+
+        </tr>
+    </table>
+</div>
+<a href="/libraries">Back to list</a>
+
+
+</body>
+</html>

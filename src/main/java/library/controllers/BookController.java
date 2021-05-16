@@ -2,12 +2,9 @@ package library.controllers;
 
 import library.models.Author;
 import library.models.Book;
-import library.models.Library;
 import library.services.AuthorService;
 import library.services.BookService;
-import library.services.LibraryService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -27,8 +24,6 @@ public class BookController {
     public void setAuthorService(AuthorService authorService) {
         this.authorService = authorService;
     }
-
-
     @Autowired
     public void setBookService(BookService bookService) {
         this.bookService = bookService;
@@ -43,9 +38,15 @@ public class BookController {
     }
 
     @PostMapping(value = "/new_book")
-    public String newPostAuthor(@RequestParam Long id, @ModelAttribute Book book) {
+    public String newPostBook(@RequestParam Long id, @ModelAttribute Book book) {
         book.setAuthor(authorService.getAuthorById(id));
         bookService.saveBook(book);
+        return "redirect:/books";
+    }
+
+    @PostMapping(value = "/remove_book")
+    public String removePostBook(@RequestParam Long id) {
+        bookService.removeBook(bookService.getBookById(id));
         return "redirect:/books";
     }
 }

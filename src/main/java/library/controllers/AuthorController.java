@@ -1,6 +1,7 @@
 package library.controllers;
 
 import library.models.Author;
+import library.models.Book;
 import library.models.Library;
 import library.services.AuthorService;
 import library.services.LibraryService;
@@ -39,5 +40,11 @@ public class AuthorController {
         //students.add(student);
         authorService.saveAuthor(author);
         return "redirect:/authors";//вызов другого контроллера
+    }
+
+    @PostMapping(value = "/remove_author")
+    public String removePostAuthor(@RequestParam Long id, @ModelAttribute Author author) {
+        authorService.removeAuthor(authorService.getAuthorById(id));
+        return "redirect:/authors";
     }
 }
