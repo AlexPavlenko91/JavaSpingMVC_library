@@ -20,28 +20,12 @@ public class Library extends BaseEntity{
     @OneToMany(mappedBy = "library", fetch = FetchType.EAGER)
     private Set<Author> authors;
 
-
-   /* @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Library library = (Library) o;
-        return Objects.equals(name, library.name) && Objects.equals(city, library.city) && Objects.equals(authors, library.authors) && Objects.equals(books, library.books);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(name, city, authors, books);
-    }*/
-
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "libraries_books",
             joinColumns = @JoinColumn(name = "id_library"),
             inverseJoinColumns = @JoinColumn(name = "id_book")
     )
     private Set<Book>books = new HashSet<>();
-    /*@OneToMany(mappedBy = "library", fetch = FetchType.EAGER)
-    private Set<Book> books;*/
 
     public Library() {
     }
@@ -51,16 +35,7 @@ public class Library extends BaseEntity{
         this.city = city;
     }
 
-    /*@Override
-    public String toString() {
-        return "Library{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", city='" + city + '\'' +
-                ", authors=" + authors +
-                ", books=" + books +
-                '}';
-    }*/
+
 
     public String getName() {
         return name;
@@ -93,6 +68,8 @@ public class Library extends BaseEntity{
     public void setBooks(Set<Book> books) {
         this.books = books;
     }
-
+    public void addBook(Book book) {
+        this.books.add(book);
+    }
 
 }

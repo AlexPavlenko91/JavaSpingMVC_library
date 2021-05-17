@@ -17,14 +17,11 @@ public class LibraryService {
         this.libraryRepo = libraryRepo;
     }
 
-
-
     public List<Library> getAllLibraries(){
         return libraryRepo.findAll();
     }
 
     public Library getById(Long id) {
-        //return jdbcStudentDAO.getById(id);
         if (id == null) {
             return null;
         } else {
@@ -37,15 +34,8 @@ public class LibraryService {
         return libraryRepo.saveAndFlush(library);
     }
 
-   /* public Library getLibraryById(Long id) {
-        return libraryRepo.getById(id);
-    }*/
-
     public void removeLibrary(Library libraryById) {
         libraryRepo.delete(libraryById);
     }
 
-   /* public void updateLib(Library library) {
-        libraryRepo.saveAndFlush(library);
-    }*/
 }

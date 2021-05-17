@@ -1,9 +1,7 @@
 package library.models;
 
-
 import javax.persistence.*;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -31,22 +29,6 @@ public class Book extends BaseEntity {
         return author;
     }
 
-    /*@Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Book book = (Book) o;
-        return Objects.equals(name, book.name) && Objects.equals(author, book.author) && Objects.equals(libraries, book.libraries);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(name, author, libraries);
-    }*/
-/*public void setLibrary(Library library) {
-        this.library = library;
-    }*/
-
     public String getName() {
         return name;
     }
@@ -55,16 +37,7 @@ public class Book extends BaseEntity {
         this.name = name;
     }
 
-
-
-   /* @ManyToOne
-    @JoinColumn(name="id_library")
-    private Library library;*/
-
     public Book() {
     }
-
-
-
 
 }

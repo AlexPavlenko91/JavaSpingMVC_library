@@ -7,12 +7,10 @@ import library.services.AuthorService;
 import library.services.BookService;
 import library.services.LibraryService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -20,12 +18,17 @@ import java.util.Set;
 @RequestMapping(value = "/libraries", method = RequestMethod.GET)
 public class LibraryController {
     private List<Library> libraries;
+    private List<Author> authors;
 
     @Autowired
     public void setLibraries(LibraryService libraryService) {
         this.libraries = libraryService.getAllLibraries();
     }
 
+    @Autowired
+    public void setAuthors(AuthorService authorService) {
+        this.authors = authorService.getAllAuthors();
+    }
 
     private LibraryService libraryService;
     private BookService bookService;
@@ -59,8 +62,10 @@ public class LibraryController {
 
     @PostMapping(value = "/show_lib")
     public String showPostLibrary(Model model, @RequestParam(name = "id") Long id) {
-        //students.add(student);
-        model.addAttribute("libraryById", libraryService.getById(id));
+        Library library = libraries.stream().filter(lib -> lib.getId().equals(id))
+                .findFirst()
+                .orElse(null);
+        model.addAttribute("libraryById", library);
         return "show_library";
     }
 
@@ -69,14 +74,9 @@ public class LibraryController {
         return "new_library";
     }
 
-    /*@GetMapping(value = "/show_lib")
-    public String showLibrary() {
-        return "show_library";
-    }*/
 
     @PostMapping(value = "/new_post")
     public String newPostLibrary(@ModelAttribute Library library) {
-        //students.add(student);
         libraryService.saveLibrary(library);
         return "redirect:/libraries";//вызов другого контроллера
     }
@@ -84,17 +84,21 @@ public class LibraryController {
     @PostMapping(value = "/new_book")
     public String newPostBookToLibrary(@RequestParam(name = "idAuthor") Long idAuthor, @ModelAttribute Book book,
                                        @RequestParam(name = "idLib") Long idLib) {
-        book.setAuthor(authorService.getAuthorById(idAuthor));
+        Author author = authors.stream().filter(a -> a.getId().equals(idAuthor))
+                .findFirst()
+                .orElse(null);
+
+        book.setAuthor(author);
+
         Library library = libraries.stream().filter(lib -> lib.getId().equals(idLib))
                 .findAny()
                 .orElse(null);
 
         if (library != null) {
-            library.setBooks(Set.of(book));
+            library.addBook(book);
             book.setLibraries(Set.of(library));
         }
         bookService.saveBook(book);
-        libraryService.removeLibrary(library);
         libraryService.saveLibrary(library);
         return "redirect:/libraries";
     }
