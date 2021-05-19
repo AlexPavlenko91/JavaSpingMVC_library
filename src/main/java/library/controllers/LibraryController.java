@@ -84,11 +84,11 @@ public class LibraryController {
     @PostMapping(value = "/new_book")
     public String newPostBookToLibrary(@RequestParam(name = "idAuthor") Long idAuthor, @ModelAttribute Book book,
                                        @RequestParam(name = "idLib") Long idLib) {
-        Author author = authors.stream().filter(a -> a.getId().equals(idAuthor))
+       /* Author author = authors.stream().filter(a -> a.getId().equals(idAuthor))
                 .findFirst()
-                .orElse(null);
-
-        book.setAuthor(author);
+                .orElse(null);*/
+    
+        book.setAuthor(authorService.getAuthorById(idAuthor));
 
         Library library = libraries.stream().filter(lib -> lib.getId().equals(idLib))
                 .findAny()

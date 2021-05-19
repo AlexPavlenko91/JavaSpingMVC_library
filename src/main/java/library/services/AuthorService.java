@@ -30,7 +30,7 @@ public class AuthorService {
 
 
     public Author getAuthorById(Long id) {
-        return authorRepo.getById(id);
+        return authorRepo.getAuthorById(id);
     }
 
     public void removeAuthor(Author authorById) {
